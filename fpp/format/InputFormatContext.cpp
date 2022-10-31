@@ -1,6 +1,8 @@
 #include "InputFormatContext.hpp"
+#include <cstdio>
 #include <fpp/core/Utils.hpp>
 #include <fpp/core/FFmpegException.hpp>
+#include <iostream>
 
 extern "C" {
     #include <libavformat/avformat.h>
@@ -11,6 +13,9 @@ namespace fpp {
 InputFormatContext::InputFormatContext(const std::string_view mrl, const std::string_view format)
     : _input_format { findInputFormat(format) } {
     setMediaResourceLocator(mrl);
+	// printf("test:%s\n");
+	printf("<%s %d>\n",__func__, __LINE__);
+	std::cout << mrl << std::endl;
     createContext();
 }
 

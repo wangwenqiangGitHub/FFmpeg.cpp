@@ -9,7 +9,8 @@ void transsizing() {
 
     /* create source */
     fpp::InputFormatContext source {
-        "rtsp://91.197.91.139/live/ch00_0"
+        // "rtsp://91.197.91.139/live/ch00_0"
+	"test.ts"
     };
 
     /* open source */
