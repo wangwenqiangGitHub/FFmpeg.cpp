@@ -18,7 +18,9 @@ auto main() -> int {
 //        mic_to_file();
 //        record_screen_win();
        // transsizing();
-	   save_picture();
+	// 保存图片
+	   // save_picture();
+	   cutVideo(0.0, 2.0, "test.mp4", "tt.mp4");
 
         // Memory stuff
 //        write_to_memory();

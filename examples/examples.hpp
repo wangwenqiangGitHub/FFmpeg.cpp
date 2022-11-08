@@ -8,6 +8,10 @@ void webcam_to_udp();
 void mic_to_file();
 void record_screen_win();
 void save_picture();
+void cutVideo(double start_seconds,
+		double end_seconds,
+		const char *inputFileName,
+		const char *outputFileName);
 // Memory stuff
 void write_to_memory();
 void read_from_memory();
