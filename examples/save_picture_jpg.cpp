@@ -26,16 +26,21 @@ using namespace std;
 
 char errbuf[256];
 char timebuf[256];
+// 利用AVFormatContext, 可以获取相关格式(容器)的信息
 static AVFormatContext *fmt_ctx = NULL;
+// 编解码器上下文
 static AVCodecContext *video_dec_ctx = NULL;
 static int width, height;
 static enum AVPixelFormat pix_fmt;
+// 存储每一个视频/音频流信息的结构体
 static AVStream *video_stream = NULL;
 static const char *src_filename = NULL;
 static const char *output_dir = NULL;
 static int video_stream_idx = -1;
+// AVFrame是包含码流参数较多的结构体
 static AVFrame *frame = NULL;
 static AVFrame *pFrameRGB = NULL;
+// AVPacket是存储压缩编码数据相关信息的结构体
 static AVPacket pkt;
 static struct SwsContext *pSWSCtx = NULL;
 static int video_frame_count = 0;
@@ -108,6 +113,7 @@ static int open_codec_context(int *stream_idx,
 {
     int ret, stream_index;
     AVStream *st;
+	// AVCodec组件能让我们知道如何编解码这个流
     AVCodec *dec = NULL;
     AVDictionary *opts = NULL;
     ret = av_find_best_stream(fmt_ctx, type, -1, -1, NULL, 0);
@@ -122,6 +128,7 @@ static int open_codec_context(int *stream_idx,
         stream_index = ret;
         st = fmt_ctx->streams[stream_index];
         /* find decoder for the stream */
+		// 找到已经注册的解码器返回AVCodec，让我们知道如何编解码这个流
         dec = avcodec_find_decoder(st->codecpar->codec_id);
         if (!dec)
         {
@@ -130,6 +137,7 @@ static int open_codec_context(int *stream_idx,
             return AVERROR(EINVAL);
         }
         /* Allocate a codec context for the decoder */
+		// 编解码器上下文
         *dec_ctx = avcodec_alloc_context3(dec);
         if (!*dec_ctx)
         {
@@ -217,19 +225,26 @@ int save_picture()
     src_filename = "test.flv";
     output_dir = "test_a";
     /* open input file, and allocate format context */
+	// 打开一个文件读取文件的头信息，利用相关格式的简要信息填充AVFormatContext(注意，编解码器通常不会打开),需要使用
+	// avformat_open_input函数，该函数需要AVFormatContext，文件名和两个可选参数:AVInputFormat(如果为NULL,FFMPEG将参测格式)
+	// AVDictionary(解封装参数)
     if (avformat_open_input(&fmt_ctx, src_filename, NULL, NULL) < 0)
     {
         fprintf(stderr, "Could not open source file %s\n", src_filename);
         exit(1);
     }
-
+	// 输出视频的格式和时长
+	printf("Format %s, duration %lld us", fmt_ctx->iformat->long_name, fmt_ctx->duration);
     /* retrieve stream information */
+	// 为了访问数据流，我们需要从媒体文件中读取数据，需要利用函数avformat_find_stream_info完成此步骤
+	// fmt_ctx->nb_streams将获取所有的流信息，并且通过fmt_ctx->stream[i]将获取到指定的i数据流(AVStream)
     if (avformat_find_stream_info(fmt_ctx, NULL) < 0)
     {
         fprintf(stderr, "Could not find stream information\n");
         exit(1);
     }
 
+	// 打开视频解码器
     if (open_codec_context(&video_stream_idx, &video_dec_ctx, fmt_ctx, AVMEDIA_TYPE_VIDEO) >= 0)
     {
         video_stream = fmt_ctx->streams[video_stream_idx];
@@ -275,6 +290,7 @@ int save_picture()
         printf("Demuxing video from file '%s' to dir: %s\n", src_filename, output_dir);
 
     /* read frames from the file */
+	// 使用av_read_frame函数读取帧数据来填充数据包
     while (av_read_frame(fmt_ctx, &pkt) >= 0)
     {
         AVPacket orig_pkt = pkt;
