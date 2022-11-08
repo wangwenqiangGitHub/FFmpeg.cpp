@@ -17,7 +17,8 @@ auto main() -> int {
 //        webcam_to_udp();
 //        mic_to_file();
 //        record_screen_win();
-       transsizing();
+       // transsizing();
+	   save_picture();
 
         // Memory stuff
 //        write_to_memory();

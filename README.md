@@ -84,3 +84,8 @@ FFmpeg.cpp is a C++ wrapper for FFmpeg libraries
     }
 ## Examples
 To see more: transcoding, screen capture, webcam recording, rtp stream, youtube stream, etc., check the [examples](https://github.com/Yurter/FFmpeg.cpp/tree/master/examples)
+
+## lib
+```
+sudo apt install libjpeg-dev
+```
