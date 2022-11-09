@@ -20,7 +20,8 @@ auto main() -> int {
        // transsizing();
 	// 保存图片
 	   // save_picture();
-	   cutVideo(0.0, 2.0, "test.mp4", "tt.mp4");
+	   // cutVideo(0.0, 2.0, "test.mp4", "tt.mp4");
+	   rtsp2mp4("rtsp://127.0.0.1:8090/h264/stream1", "rtsp.mp4");
 
         // Memory stuff
 //        write_to_memory();

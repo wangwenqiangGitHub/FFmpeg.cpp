@@ -12,6 +12,7 @@ void cutVideo(double start_seconds,
 		double end_seconds,
 		const char *inputFileName,
 		const char *outputFileName);
+int rtsp2mp4(const char* pInputFileName, const char* pOutputFileName);
 // Memory stuff
 void write_to_memory();
 void read_from_memory();

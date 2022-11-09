@@ -62,7 +62,8 @@ void cutVideo(double start_seconds, double end_seconds, const char *inputFileNam
 		in_stream = inputfile->streams[pkt.stream_index];
 		out_stream = outputfile->streams[pkt.stream_index];
 		if (av_q2d(in_stream->time_base) * pkt.pts > end_seconds) {
-			av_free_packet(&pkt);
+			// av_free_packet(&pkt);
+			av_packet_unref(&pkt);
 			break;
 		}
 		if (dts_start_from[pkt.stream_index] == 0) {
@@ -90,7 +91,8 @@ void cutVideo(double start_seconds, double end_seconds, const char *inputFileNam
 			fprintf(stderr, "Error muxing packet\n");
 			break;
 		}
-		av_free_packet(&pkt);
+		// av_free_packet(&pkt);
+		av_packet_unref(&pkt);
 	}
 	//释放资源
 	free(dts_start_from);
